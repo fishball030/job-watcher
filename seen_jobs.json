@@ -1,5 +1,17 @@
 {
-  "polyu_social_work_ra": [],
+  "polyu_social_work_ra": [
+    "https://jobs.polyu.edu.hk/academic.php",
+    "https://jobs.polyu.edu.hk/central_senior.php",
+    "https://jobs.polyu.edu.hk/deans_heads.php",
+    "https://jobs.polyu.edu.hk/general.php",
+    "https://jobs.polyu.edu.hk/hro/sitemap",
+    "https://jobs.polyu.edu.hk/internal_advertisement.php?group=dh",
+    "https://jobs.polyu.edu.hk/management.php",
+    "https://jobs.polyu.edu.hk/research.php",
+    "https://jobs.polyu.edu.hk/research.php?dept=24&keyword=#skip-start",
+    "https://jobs.polyu.edu.hk/research.php?dept=24&sort=ASC",
+    "https://jobs.polyu.edu.hk/research.php?dept=24&sort=DESC"
+  ],
   "hku_social_sciences_research": [
     "https://jobs.hku.hk/en/Search/?search-keyword=&category=research+staff&brand=faculty+of+social+sciences&subscribe=true",
     "https://jobs.hku.hk/en/filter/?search-keyword=&category=research%20staff&brand=faculty%20of%20social%20sciences&job-mail-subscribe-privacy=agree#!",
