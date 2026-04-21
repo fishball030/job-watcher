@@ -1,24 +1,5 @@
 {
-  "polyu_social_work_ra": [
-    "https://jobs.polyu.edu.hk/academic.php",
-    "https://jobs.polyu.edu.hk/central_senior.php",
-    "https://jobs.polyu.edu.hk/deans_heads.php",
-    "https://jobs.polyu.edu.hk/general.php",
-    "https://jobs.polyu.edu.hk/hro/sitemap",
-    "https://jobs.polyu.edu.hk/internal_advertisement.php?group=dh",
-    "https://jobs.polyu.edu.hk/management.php",
-    "https://jobs.polyu.edu.hk/rap.php",
-    "https://jobs.polyu.edu.hk/research.php",
-    "https://jobs.polyu.edu.hk/research.php?dept=24&keyword=#skip-start",
-    "https://jobs.polyu.edu.hk/research.php?dept=24&sort=ASC",
-    "https://jobs.polyu.edu.hk/research.php?dept=24&sort=DESC",
-    "polyu_social_work_ra:0e71405e409896c3",
-    "polyu_social_work_ra:26f8ef36195a437b",
-    "polyu_social_work_ra:54308646cbb37820",
-    "polyu_social_work_ra:5c7e893eddc786c5",
-    "polyu_social_work_ra:889ae04783a0f638",
-    "polyu_social_work_ra:c6307e0ff01a6dc6"
-  ],
+  "polyu_social_work_ra": [],
   "hku_social_sciences_research": [
     "https://jobs.hku.hk/en/Search/?search-keyword=&category=research+staff&brand=faculty+of+social+sciences&subscribe=true",
     "https://jobs.hku.hk/en/filter/?search-keyword=&category=research%20staff&brand=faculty%20of%20social%20sciences&job-mail-subscribe-privacy=agree#!",
@@ -35,32 +16,12 @@
     "https://jobs.hku.hk/en/job/535029/project-officer-at-the-rank-of-research-assistant-iii-in-the-faculty-of-social-sciences"
   ],
   "cuhk_social_work_research": [
-    "cuhk_social_work_research:09b632ec101e9872",
     "https://cuhk.taleo.net/careersection/cu_career_non_teach/jobdetail.ftl?job=260000KT&tz=GMT%2B00%3A00&tzname=UTC",
     "https://cuhk.taleo.net/careersection/cu_career_non_teach/jobdetail.ftl?job=260000L1&tz=GMT%2B00%3A00&tzname=UTC",
     "https://cuhk.taleo.net/careersection/cu_career_non_teach/jobdetail.ftl?job=260000LM&tz=GMT%2B00%3A00&tzname=UTC",
     "https://cuhk.taleo.net/careersection/cu_career_non_teach/jobdetail.ftl?job=260000LO&tz=GMT%2B00%3A00&tzname=UTC",
     "https://cuhk.taleo.net/careersection/cu_career_non_teach/jobdetail.ftl?job=260000MM&tz=GMT%2B00%3A00&tzname=UTC"
   ],
-  "cityu_social_behavioural_rs": [
-    "cityu_social_behavioural_rs:305bc6543251095e",
-    "cityu_social_behavioural_rs:f2cb2bcfb3eb8e6c"
-  ],
-  "hkbu_research_assistant": [
-    "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/job/23241166/?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
-    "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/job/23241242/?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
-    "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/job/25260138/?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
-    "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/job/25260322/?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
-    "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/job/25260441/?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
-    "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/job/25260459/?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
-    "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/job/25260460/?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
-    "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/job/25260534/?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
-    "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/job/25260541/?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
-    "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/job/25260558/?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
-    "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/job/25260559/?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
-    "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/job/25260586/?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
-    "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/job/25260628/?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
-    "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/job/25260641/?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
-    "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/job/25260655/?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285"
-  ]
+  "cityu_social_behavioural_rs": [],
+  "hkbu_research_assistant": []
 }
