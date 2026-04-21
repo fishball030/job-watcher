@@ -1,0 +1,42 @@
+[
+  {
+    "id": "polyu_social_work_ra",
+    "name": "PolyU Research Dept 24",
+    "url": "https://jobs.polyu.edu.hk/research.php?dept=24&keyword=",
+    "domain": "jobs.polyu.edu.hk",
+    "include_keywords": [],
+    "exclude_keywords": []
+  },
+  {
+    "id": "hku_social_sciences_research",
+    "name": "HKU Social Sciences Research Staff",
+    "url": "https://jobs.hku.hk/en/filter/?search-keyword=&category=research%20staff&brand=faculty%20of%20social%20sciences&job-mail-subscribe-privacy=agree",
+    "domain": "jobs.hku.hk",
+    "include_keywords": ["research"],
+    "exclude_keywords": []
+  },
+  {
+    "id": "cuhk_social_work_research",
+    "name": "CUHK Non-Teaching Social Work Research Posts",
+    "url": "https://cuhk.taleo.net/careersection/cu_career_non_teach/jobsearch.ftl?lang=en&portal=8115020119&lang=en#",
+    "domain": "cuhk.taleo.net",
+    "include_keywords": ["research", "social work"],
+    "exclude_keywords": []
+  },
+  {
+    "id": "cityu_social_behavioural_rs",
+    "name": "CityU RS Social and Behavioural Sciences",
+    "url": "https://jobs1.cityu.edu.hk/apply/Default.aspx?jobtype=RS",
+    "domain": "jobs1.cityu.edu.hk",
+    "include_keywords": ["social", "behavioural sciences"],
+    "exclude_keywords": []
+  },
+  {
+    "id": "hkbu_research_assistant",
+    "name": "HKBU Research Assistant",
+    "url": "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/jobs?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
+    "domain": "fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com",
+    "include_keywords": ["research assistant"],
+    "exclude_keywords": []
+  }
+]

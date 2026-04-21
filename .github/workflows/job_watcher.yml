@@ -1,0 +1,48 @@
+name: Job Watcher
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: job-watcher
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run watcher
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+          TG_ERROR_CHAT_ID: ${{ secrets.TG_ERROR_CHAT_ID }}
+          FIRST_RUN_NOTIFY: "true"
+          MAX_NOTIFY_ITEMS: "10"
+        run: python bot.py
+
+      - name: Commit seen_jobs updates
+        run: |
+          if [ -f seen_jobs.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add seen_jobs.json
+            git diff --cached --quiet || git commit -m "chore: update seen jobs cache"
+            git push
+          fi
