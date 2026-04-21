@@ -1,1 +1,34 @@
-[]
+{
+  "polyu_social_work_ra": [
+    "https://jobs.polyu.edu.hk/academic.php",
+    "https://jobs.polyu.edu.hk/central_senior.php",
+    "https://jobs.polyu.edu.hk/deans_heads.php",
+    "https://jobs.polyu.edu.hk/general.php",
+    "https://jobs.polyu.edu.hk/hro/sitemap",
+    "https://jobs.polyu.edu.hk/internal_advertisement.php?group=dh",
+    "https://jobs.polyu.edu.hk/management.php",
+    "https://jobs.polyu.edu.hk/rap.php",
+    "https://jobs.polyu.edu.hk/research.php",
+    "https://jobs.polyu.edu.hk/research.php?dept=24&keyword=#skip-start",
+    "https://jobs.polyu.edu.hk/research.php?dept=24&sort=ASC",
+    "https://jobs.polyu.edu.hk/research.php?dept=24&sort=DESC"
+  ],
+  "hku_social_sciences_research": [
+    "https://jobs.hku.hk/en/Search/?search-keyword=&category=research+staff&brand=faculty+of+social+sciences&subscribe=true",
+    "https://jobs.hku.hk/en/filter/?search-keyword=&category=research%20staff&brand=faculty%20of%20social%20sciences&job-mail-subscribe-privacy=agree#!",
+    "https://jobs.hku.hk/en/job/533981/parttime-research-assistant-ra-iii-field-data-collection-drivingbased",
+    "https://jobs.hku.hk/en/job/534291/postdoctoral-fellow-senior-research-assistant",
+    "https://jobs.hku.hk/en/job/534365/research-assistant-iii",
+    "https://jobs.hku.hk/en/job/534506/fulltimeparttime-senior-research-assistant-research-assistant-iii",
+    "https://jobs.hku.hk/en/job/534622/parttime-research-assistant-iii",
+    "https://jobs.hku.hk/en/job/534829/postdoctoral-fellow-research-assistant-i-in-the-department-of-psychology",
+    "https://jobs.hku.hk/en/job/534844/research-assistant-iii",
+    "https://jobs.hku.hk/en/job/534882/research-assistant-iii-in-the-department-of-social-work-and-social-administration",
+    "https://jobs.hku.hk/en/job/534904/research-assistant-iii",
+    "https://jobs.hku.hk/en/job/535028/fulltime-research-assistant-iii-in-the-department-of-geography",
+    "https://jobs.hku.hk/en/job/535029/project-officer-at-the-rank-of-research-assistant-iii-in-the-faculty-of-social-sciences"
+  ],
+  "cuhk_social_work_research": [],
+  "cityu_social_behavioural_rs": [],
+  "hkbu_research_assistant": []
+}
