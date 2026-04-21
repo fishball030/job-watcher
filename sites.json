@@ -21,6 +21,7 @@
     "url": "https://cuhk.taleo.net/careersection/cu_career_non_teach/jobsearch.ftl?lang=en&portal=8115020119&lang=en#",
     "domain": "cuhk.taleo.net",
     "include_keywords": ["research", "social work"],
+    "include_match": "any",
     "exclude_keywords": []
   },
   {
@@ -29,6 +30,7 @@
     "url": "https://jobs1.cityu.edu.hk/apply/Default.aspx?jobtype=RS",
     "domain": "jobs1.cityu.edu.hk",
     "include_keywords": ["social", "behavioural sciences"],
+    "include_match": "all",
     "exclude_keywords": []
   },
   {
@@ -36,7 +38,8 @@
     "name": "HKBU Research Assistant",
     "url": "https://fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/hkbu/jobs?lastSelectedFacet=ORGANIZATIONS&selectedOrganizationsFacet=300000099473285",
     "domain": "fa-ewqq-saasfaprod1.fa.ocs.oraclecloud.com",
-    "include_keywords": ["research assistant"],
+    "include_keywords": ["research assistant", "research asst", "assistant"],
+    "include_match": "any",
     "exclude_keywords": []
   }
 ]

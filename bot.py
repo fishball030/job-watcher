@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import hashlib
 from datetime import datetime, timezone
 from urllib.parse import urljoin, urlparse
 
@@ -93,6 +94,7 @@ def same_domain(url: str, allowed_domain: str | None) -> bool:
 def collect_jobs_from_anchors(site: dict, anchors: list[tuple[str, str]]) -> list[dict]:
     include_keywords = [k.lower() for k in site.get("include_keywords", [])]
     exclude_keywords = [k.lower() for k in site.get("exclude_keywords", [])]
+    include_match = (site.get("include_match") or "all").lower()
     domain = site.get("domain")
     jobs: dict[str, dict] = {}
     base_url = site["url"]
@@ -100,20 +102,26 @@ def collect_jobs_from_anchors(site: dict, anchors: list[tuple[str, str]]) -> lis
     for href, title in anchors:
         href = normalize_text(href)
         title = normalize_text(title)
-        if not href or not title:
+        if not title:
             continue
 
-        full_url = urljoin(base_url, href)
-        if not same_domain(full_url, domain):
+        full_url = urljoin(base_url, href) if href else base_url
+        if href and not same_domain(full_url, domain):
             continue
 
         text_blob = f"{title} {full_url}".lower()
-        if include_keywords and not all(k in text_blob for k in include_keywords):
-            continue
+        if include_keywords:
+            if include_match == "any":
+                if not any(k in text_blob for k in include_keywords):
+                    continue
+            else:
+                if not all(k in text_blob for k in include_keywords):
+                    continue
         if exclude_keywords and any(k in text_blob for k in exclude_keywords):
             continue
 
-        jobs[full_url] = {"id": full_url, "title": title, "url": full_url, "site_name": site["name"]}
+        job_id = full_url if href else f"{site['id']}:{hashlib.sha1(title.encode('utf-8')).hexdigest()[:16]}"
+        jobs[job_id] = {"id": job_id, "title": title, "url": full_url, "site_name": site["name"]}
 
     return list(jobs.values())
 
@@ -131,7 +139,10 @@ def parse_jobs_with_requests(site: dict) -> list[dict]:
     soup = BeautifulSoup(resp.text, "lxml")
     anchors = []
     for a in soup.select("a[href]"):
-        anchors.append((a.get("href", ""), a.get_text(" ", strip=True)))
+        title = a.get_text(" ", strip=True) or a.get("title", "") or a.get("aria-label", "")
+        container = a.parent.get_text(" ", strip=True) if a.parent else ""
+        merged_title = normalize_text(f"{title} {container}")
+        anchors.append((a.get("href", ""), merged_title))
     return collect_jobs_from_anchors(site, anchors)
 
 
@@ -144,16 +155,31 @@ def parse_jobs_with_playwright(site: dict) -> list[dict]:
             page.goto(url, wait_until="domcontentloaded", timeout=60000)
             # Allow JS-heavy job boards to render list content.
             page.wait_for_timeout(6000)
-            html = page.content()
+            raw_items = page.eval_on_selector_all(
+                "a, [role='link'], button",
+                """els => els.map(e => {
+                    const txt = (e.innerText || e.textContent || e.getAttribute('aria-label') || '').trim();
+                    const href = e.getAttribute('href') || e.getAttribute('data-href') || '';
+                    const parentTxt = (e.parentElement && (e.parentElement.innerText || e.parentElement.textContent) || '').trim();
+                    const onclick = e.getAttribute('onclick') || '';
+                    return { txt, href, parentTxt, onclick };
+                })""",
+            )
         except PlaywrightTimeoutError:
-            html = page.content()
+            raw_items = []
         finally:
             browser.close()
-
-    soup = BeautifulSoup(html, "lxml")
-    anchors = []
-    for a in soup.select("a[href]"):
-        anchors.append((a.get("href", ""), a.get_text(" ", strip=True)))
+    anchors: list[tuple[str, str]] = []
+    for item in raw_items:
+        href = normalize_text(item.get("href", ""))
+        title = normalize_text(f"{item.get('txt', '')} {item.get('parentTxt', '')}")
+        onclick = item.get("onclick", "")
+        if not href and "http" in onclick:
+            m = re.search(r"https?://[^'\\\"]+", onclick)
+            if m:
+                href = m.group(0)
+        if title:
+            anchors.append((href, title))
     return collect_jobs_from_anchors(site, anchors)
 
 
