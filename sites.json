@@ -14,6 +14,7 @@
     "id": "hku_social_sciences_research",
     "name": "HKU Social Sciences Research Staff",
     "url": "https://jobs.hku.hk/en/filter/?search-keyword=&category=research%20staff&brand=faculty%20of%20social%20sciences&job-mail-subscribe-privacy=agree",
+    "extractor": "hku_table",
     "domain": "jobs.hku.hk",
     "url_must_contain": ["/jobs", "/position", "/vacancy", "/job"],
     "include_keywords": ["research"],
@@ -27,7 +28,7 @@
     "url_must_contain": ["jobdetail.ftl?job="],
     "block_title_keywords": ["research posts("],
     "include_keywords": ["research", "social work"],
-    "include_match": "any",
+    "include_match": "all",
     "exclude_keywords": []
   },
   {

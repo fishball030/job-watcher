@@ -186,6 +186,45 @@ def parse_jobs_with_requests(site: dict) -> list[dict]:
                 "title": title,
                 "url": site["url"],
                 "site_name": site["name"],
+                "department": dept,
+                "position": position,
+                "project_title": project_title,
+                "closing_date": closing_date,
+                "ref_no": ref_no,
+            }
+        return list(jobs.values())
+    if site.get("extractor") == "hku_table":
+        jobs: dict[str, dict] = {}
+        for tr in soup.select("table tr"):
+            tds = tr.select("td")
+            if len(tds) < 4:
+                continue
+            ref_no = normalize_text(tds[0].get_text(" ", strip=True))
+            title_anchor = tds[1].select_one("a[href]")
+            title = normalize_text(tds[1].get_text(" ", strip=True))
+            department = normalize_text(tds[2].get_text(" ", strip=True))
+            closing_date = normalize_text(tds[3].get_text(" ", strip=True))
+            if not ref_no.isdigit() or not title_anchor:
+                continue
+
+            full_url = urljoin(url, title_anchor.get("href", ""))
+            include_keywords = [k.lower() for k in site.get("include_keywords", [])]
+            exclude_keywords = [k.lower() for k in site.get("exclude_keywords", [])]
+            text_blob = f"{title} {department} {full_url}".lower()
+            if include_keywords and not any(k in text_blob for k in include_keywords):
+                continue
+            if exclude_keywords and any(k in text_blob for k in exclude_keywords):
+                continue
+
+            job_id = f"{site['id']}:{ref_no}"
+            jobs[job_id] = {
+                "id": job_id,
+                "title": f"{title} ({ref_no})",
+                "url": full_url,
+                "site_name": site["name"],
+                "department": department,
+                "closing_date": closing_date,
+                "ref_no": ref_no,
             }
         return list(jobs.values())
 
@@ -236,6 +275,9 @@ def parse_jobs_with_playwright(site: dict) -> list[dict]:
 
 
 def parse_jobs_for_site(site: dict) -> list[dict]:
+    if site.get("extractor") == "polyu_table":
+        return parse_jobs_with_requests(site)
+
     if USE_PLAYWRIGHT:
         try:
             jobs = parse_jobs_with_playwright(site)
@@ -253,6 +295,14 @@ def build_new_jobs_message(all_new_jobs: list[dict]) -> str:
 
     for idx, job in enumerate(all_new_jobs[:MAX_NOTIFY_ITEMS], start=1):
         lines.append(f"{idx}. [{job['site_name']}] {job['title']}")
+        if job.get("department"):
+            lines.append(f"Department: {job['department']}")
+        if job.get("project_title"):
+            lines.append(f"Project Title: {job['project_title']}")
+        if job.get("closing_date"):
+            lines.append(f"Closing Date: {job['closing_date']}")
+        if job.get("ref_no"):
+            lines.append(f"Ref. No.: {job['ref_no']}")
         lines.append(job["url"])
         lines.append("")
 
