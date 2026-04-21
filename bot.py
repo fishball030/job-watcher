@@ -161,6 +161,34 @@ def parse_jobs_with_requests(site: dict) -> list[dict]:
     resp = requests.get(url, headers=headers, timeout=45)
     resp.raise_for_status()
     soup = BeautifulSoup(resp.text, "lxml")
+    if site.get("extractor") == "polyu_table":
+        jobs: dict[str, dict] = {}
+        for tr in soup.select("table tr"):
+            cells = [normalize_text(td.get_text(" ", strip=True)) for td in tr.select("td")]
+            if len(cells) < 5:
+                continue
+            dept, position, project_title, closing_date, ref_no = cells[:5]
+            if not ref_no or ref_no.lower().startswith("ref"):
+                continue
+            title = f"{position} ({ref_no})"
+            context = f"{dept} {project_title} {closing_date}"
+            include_keywords = [k.lower() for k in site.get("include_keywords", [])]
+            exclude_keywords = [k.lower() for k in site.get("exclude_keywords", [])]
+            text_blob = f"{title} {context}".lower()
+            if include_keywords and not any(k in text_blob for k in include_keywords):
+                continue
+            if exclude_keywords and any(k in text_blob for k in exclude_keywords):
+                continue
+
+            job_id = f"{site['id']}:{ref_no}"
+            jobs[job_id] = {
+                "id": job_id,
+                "title": title,
+                "url": site["url"],
+                "site_name": site["name"],
+            }
+        return list(jobs.values())
+
     anchors: list[tuple[str, str, str]] = []
     for a in soup.select("a[href]"):
         title = a.get_text(" ", strip=True) or a.get("title", "") or a.get("aria-label", "")

@@ -3,8 +3,9 @@
     "id": "polyu_social_work_ra",
     "name": "PolyU Research Dept 24",
     "url": "https://jobs.polyu.edu.hk/research.php?dept=24&keyword=",
+    "extractor": "polyu_table",
     "domain": "jobs.polyu.edu.hk",
-    "url_must_contain": ["research.php?job="],
+    "url_must_contain": [],
     "block_title_keywords": ["share", "menu", "search", "open / close", "back"],
     "include_keywords": [],
     "exclude_keywords": []
