@@ -91,25 +91,48 @@ def same_domain(url: str, allowed_domain: str | None) -> bool:
     return host == allowed or host.endswith(f".{allowed}")
 
 
-def collect_jobs_from_anchors(site: dict, anchors: list[tuple[str, str]]) -> list[dict]:
+def collapse_duplicated_title(title: str) -> str:
+    parts = title.split()
+    if len(parts) >= 4 and len(parts) % 2 == 0:
+        half = len(parts) // 2
+        if parts[:half] == parts[half:]:
+            return " ".join(parts[:half])
+    return title
+
+
+def collect_jobs_from_anchors(site: dict, anchors: list[tuple[str, str, str]]) -> list[dict]:
     include_keywords = [k.lower() for k in site.get("include_keywords", [])]
     exclude_keywords = [k.lower() for k in site.get("exclude_keywords", [])]
     include_match = (site.get("include_match") or "all").lower()
     domain = site.get("domain")
+    url_must_contain = [x.lower() for x in site.get("url_must_contain", [])]
+    block_title_keywords = [x.lower() for x in site.get("block_title_keywords", [])]
+    allow_text_only = bool(site.get("allow_text_only", False))
     jobs: dict[str, dict] = {}
     base_url = site["url"]
 
-    for href, title in anchors:
+    for href, title, context in anchors:
         href = normalize_text(href)
-        title = normalize_text(title)
+        title = collapse_duplicated_title(normalize_text(title))
+        context = normalize_text(context)
         if not title:
+            continue
+
+        if not href and not allow_text_only:
             continue
 
         full_url = urljoin(base_url, href) if href else base_url
         if href and not same_domain(full_url, domain):
             continue
 
-        text_blob = f"{title} {full_url}".lower()
+        if href and url_must_contain and not any(k in full_url.lower() for k in url_must_contain):
+            continue
+
+        low_title = title.lower()
+        if any(k in low_title for k in block_title_keywords):
+            continue
+
+        text_blob = f"{title} {context} {full_url}".lower()
         if include_keywords:
             if include_match == "any":
                 if not any(k in text_blob for k in include_keywords):
@@ -137,12 +160,11 @@ def parse_jobs_with_requests(site: dict) -> list[dict]:
     resp = requests.get(url, headers=headers, timeout=45)
     resp.raise_for_status()
     soup = BeautifulSoup(resp.text, "lxml")
-    anchors = []
+    anchors: list[tuple[str, str, str]] = []
     for a in soup.select("a[href]"):
         title = a.get_text(" ", strip=True) or a.get("title", "") or a.get("aria-label", "")
         container = a.parent.get_text(" ", strip=True) if a.parent else ""
-        merged_title = normalize_text(f"{title} {container}")
-        anchors.append((a.get("href", ""), merged_title))
+        anchors.append((a.get("href", ""), title, container))
     return collect_jobs_from_anchors(site, anchors)
 
 
@@ -169,17 +191,18 @@ def parse_jobs_with_playwright(site: dict) -> list[dict]:
             raw_items = []
         finally:
             browser.close()
-    anchors: list[tuple[str, str]] = []
+    anchors: list[tuple[str, str, str]] = []
     for item in raw_items:
         href = normalize_text(item.get("href", ""))
-        title = normalize_text(f"{item.get('txt', '')} {item.get('parentTxt', '')}")
+        title = normalize_text(item.get("txt", ""))
+        context = normalize_text(item.get("parentTxt", ""))
         onclick = item.get("onclick", "")
         if not href and "http" in onclick:
             m = re.search(r"https?://[^'\\\"]+", onclick)
             if m:
                 href = m.group(0)
         if title:
-            anchors.append((href, title))
+            anchors.append((href, title, context))
     return collect_jobs_from_anchors(site, anchors)
 
 
