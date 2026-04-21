@@ -19,6 +19,7 @@ TG_ERROR_CHAT_ID = os.getenv("TG_ERROR_CHAT_ID", "").strip()
 FIRST_RUN_NOTIFY = os.getenv("FIRST_RUN_NOTIFY", "false").lower() == "true"
 MAX_NOTIFY_ITEMS = int(os.getenv("MAX_NOTIFY_ITEMS", "10"))
 USE_PLAYWRIGHT = os.getenv("USE_PLAYWRIGHT", "true").lower() == "true"
+SEND_NO_CHANGE_SUMMARY = os.getenv("SEND_NO_CHANGE_SUMMARY", "false").lower() == "true"
 
 
 def now_str() -> str:
@@ -246,6 +247,14 @@ def build_error_message(err: Exception) -> str:
     return f"Job Watcher 執行失敗\n時間: {now_str()}\n錯誤: {type(err).__name__}: {err}"
 
 
+def build_no_change_message(sites: list[dict], current_ids_by_site: dict[str, set[str]]) -> str:
+    lines = ["Job Watcher 檢查完成：今次冇新職位", f"檢查時間: {now_str()}", ""]
+    for site in sites:
+        site_id = site["id"]
+        lines.append(f"- {site['name']}: {len(current_ids_by_site.get(site_id, set()))} 個在列表中")
+    return "\n".join(lines)
+
+
 def main() -> None:
     sites = load_sites()
     site_ids = [s["id"] for s in sites]
@@ -278,6 +287,8 @@ def main() -> None:
 
     if all_new_jobs:
         tg_send_message(build_new_jobs_message(all_new_jobs))
+    elif SEND_NO_CHANGE_SUMMARY:
+        tg_send_message(build_no_change_message(sites, current_ids_by_site))
 
     for site_id, ids in current_ids_by_site.items():
         seen_by_site[site_id] = ids

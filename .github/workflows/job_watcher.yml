@@ -41,6 +41,7 @@ jobs:
           TG_ERROR_CHAT_ID: ${{ secrets.TG_ERROR_CHAT_ID }}
           FIRST_RUN_NOTIFY: "true"
           MAX_NOTIFY_ITEMS: "10"
+          SEND_NO_CHANGE_SUMMARY: "true"
         run: python bot.py
 
       - name: Commit seen_jobs updates
