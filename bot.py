@@ -6,6 +6,8 @@ from urllib.parse import urljoin, urlparse
 
 import requests
 from bs4 import BeautifulSoup
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
+from playwright.sync_api import sync_playwright
 
 SITES_FILE = "sites.json"
 SEEN_FILE = "seen_jobs.json"
@@ -15,6 +17,7 @@ TG_CHAT_ID = os.getenv("TG_CHAT_ID", "").strip()
 TG_ERROR_CHAT_ID = os.getenv("TG_ERROR_CHAT_ID", "").strip()
 FIRST_RUN_NOTIFY = os.getenv("FIRST_RUN_NOTIFY", "false").lower() == "true"
 MAX_NOTIFY_ITEMS = int(os.getenv("MAX_NOTIFY_ITEMS", "10"))
+USE_PLAYWRIGHT = os.getenv("USE_PLAYWRIGHT", "true").lower() == "true"
 
 
 def now_str() -> str:
@@ -87,30 +90,20 @@ def same_domain(url: str, allowed_domain: str | None) -> bool:
     return host == allowed or host.endswith(f".{allowed}")
 
 
-def parse_jobs_for_site(site: dict) -> list[dict]:
-    url = site["url"]
-    headers = {
-        "User-Agent": "Mozilla/5.0 (JobWatcherBot/2.0; +https://github.com/)",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Cache-Control": "no-cache",
-        "Pragma": "no-cache",
-    }
-    resp = requests.get(url, headers=headers, timeout=45)
-    resp.raise_for_status()
-
-    soup = BeautifulSoup(resp.text, "lxml")
+def collect_jobs_from_anchors(site: dict, anchors: list[tuple[str, str]]) -> list[dict]:
     include_keywords = [k.lower() for k in site.get("include_keywords", [])]
     exclude_keywords = [k.lower() for k in site.get("exclude_keywords", [])]
     domain = site.get("domain")
     jobs: dict[str, dict] = {}
+    base_url = site["url"]
 
-    for a in soup.select("a[href]"):
-        href = normalize_text(a.get("href", ""))
-        title = normalize_text(a.get_text(" ", strip=True))
+    for href, title in anchors:
+        href = normalize_text(href)
+        title = normalize_text(title)
         if not href or not title:
             continue
 
-        full_url = urljoin(url, href)
+        full_url = urljoin(base_url, href)
         if not same_domain(full_url, domain):
             continue
 
@@ -120,10 +113,60 @@ def parse_jobs_for_site(site: dict) -> list[dict]:
         if exclude_keywords and any(k in text_blob for k in exclude_keywords):
             continue
 
-        job_id = full_url
-        jobs[job_id] = {"id": job_id, "title": title, "url": full_url, "site_name": site["name"]}
+        jobs[full_url] = {"id": full_url, "title": title, "url": full_url, "site_name": site["name"]}
 
     return list(jobs.values())
+
+
+def parse_jobs_with_requests(site: dict) -> list[dict]:
+    url = site["url"]
+    headers = {
+        "User-Agent": "Mozilla/5.0 (JobWatcherBot/2.0; +https://github.com/)",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache",
+    }
+    resp = requests.get(url, headers=headers, timeout=45)
+    resp.raise_for_status()
+    soup = BeautifulSoup(resp.text, "lxml")
+    anchors = []
+    for a in soup.select("a[href]"):
+        anchors.append((a.get("href", ""), a.get_text(" ", strip=True)))
+    return collect_jobs_from_anchors(site, anchors)
+
+
+def parse_jobs_with_playwright(site: dict) -> list[dict]:
+    url = site["url"]
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(headless=True)
+        page = browser.new_page()
+        try:
+            page.goto(url, wait_until="domcontentloaded", timeout=60000)
+            # Allow JS-heavy job boards to render list content.
+            page.wait_for_timeout(6000)
+            html = page.content()
+        except PlaywrightTimeoutError:
+            html = page.content()
+        finally:
+            browser.close()
+
+    soup = BeautifulSoup(html, "lxml")
+    anchors = []
+    for a in soup.select("a[href]"):
+        anchors.append((a.get("href", ""), a.get_text(" ", strip=True)))
+    return collect_jobs_from_anchors(site, anchors)
+
+
+def parse_jobs_for_site(site: dict) -> list[dict]:
+    if USE_PLAYWRIGHT:
+        try:
+            jobs = parse_jobs_with_playwright(site)
+            if jobs:
+                return jobs
+        except Exception:
+            # Fall back to plain HTTP parsing if browser rendering fails.
+            pass
+    return parse_jobs_with_requests(site)
 
 
 def build_new_jobs_message(all_new_jobs: list[dict]) -> str:
